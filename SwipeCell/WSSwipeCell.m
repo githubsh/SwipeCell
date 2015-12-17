@@ -128,13 +128,19 @@
 - (void)addBackBtns
 {
     self.contentView.superview.backgroundColor = self.contentView.backgroundColor;
-
+    for (UIView *vv in [self.contentView.superview subviews]) {
+        if (vv.tag>=1000) {
+            [vv removeFromSuperview];
+        }
+    }
+    
     for (int i=0; i < self.item.btnTitles.count; i++)
     {
         UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(WSScreenWidth-self.item.btnWidth*(i+1), 0, self.item.btnWidth, self.item.cellHeight)];
         btn.backgroundColor = self.item.btnBgColors[i];
         [btn setTitle:self.item.btnTitles[i] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        btn.tag = 1000+i;
         btn.titleLabel.font = [UIFont systemFontOfSize:15];
         btn.titleLabel.textAlignment = NSTextAlignmentCenter;
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
