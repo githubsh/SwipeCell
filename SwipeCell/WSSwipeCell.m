@@ -69,33 +69,48 @@
 - (void)swipeLeftHandle:(UISwipeGestureRecognizer *)swipe
 {
     WS(bself);
-    CGFloat originX = bself.contentView.frame.origin.x;
-    if (originX == 0) {
-        [UIView animateWithDuration:self.item.btnTitles.count * 0.3 animations:^{
-            bself.contentView.frame = CGRectMake(-self.item.btnWidth*self.item.btnTitles.count, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
-        } completion:^(BOOL finished) {
-            CGFloat x = bself.contentView.frame.origin.x;
-            CGFloat xOffset = 3;
-            //  回弹效果
-            [UIView animateWithDuration:0.1 animations:^{
-                bself.contentView.frame = CGRectMake(x-xOffset, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.1 animations:^{
-                    bself.contentView.frame = CGRectMake(x, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
-                } completion:nil];
-            }];
-        }];
+    
+    BOOL isSwipeLeft = NO;
+    NSInteger rows = [self.parentTableView numberOfRowsInSection:0];
+    for (int i=0; i<rows; i++) {
+        WSSwipeCell *cell = (WSSwipeCell *)[self.parentTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        if (cell &&
+            cell.contentView.frame.origin.x != 0 &&
+            [cell isKindOfClass:[WSSwipeCell class]] && [cell respondsToSelector:@selector(swipeRightHandle:)])
+        {
+            [cell swipeRightHandle:nil];
+            isSwipeLeft = YES;
+        }
     }
-    else
-    {
-        [self swipeRightHandle:nil];
+    
+    if (!isSwipeLeft) {
+        CGFloat originX = self.contentView.frame.origin.x;
+        if (originX == 0)
+        {
+            [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
+                bself.contentView.frame = CGRectMake(-self.item.btnWidth*self.item.btnTitles.count, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+            } completion:^(BOOL finished) {
+                CGFloat x = bself.contentView.frame.origin.x;
+                CGFloat xOffset = 3;
+                //  回弹效果
+                [UIView animateWithDuration:0.05 animations:^{
+                    bself.contentView.frame = CGRectMake(x-xOffset, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+                } completion:^(BOOL finished) {
+                    [UIView animateWithDuration:0.05 animations:^{
+                        bself.contentView.frame = CGRectMake(x, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+                    } completion:nil];
+                }];
+            }];
+        } else {
+            [self swipeRightHandle:nil];
+        }
     }
 }
 
 - (void)swipeRightHandle:(UISwipeGestureRecognizer *)swipe
 {
     WS(bself);
-    [UIView animateWithDuration:self.item.btnTitles.count * 0.3 animations:^{
+    [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
         bself.contentView.frame = CGRectMake(0, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
     } completion:nil];
 }

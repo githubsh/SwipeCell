@@ -21,5 +21,6 @@
 @interface WSSwipeCell : RETableViewCell
 
 @property (nonatomic,readwrite,strong) WSSwipeItem *item;
-
+- (void)swipeLeftHandle:(UISwipeGestureRecognizer *)swipe;
+- (void)swipeRightHandle:(UISwipeGestureRecognizer *)swipe;
 @end
