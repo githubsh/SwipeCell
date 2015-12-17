@@ -25,18 +25,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    self.title = @"可以滑动的Cell";
 
     self.view.backgroundColor = [UIColor whiteColor];
     
     formTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, WSScreenWidth, WSScreenHeight-64-49) style:UITableViewStylePlain];
-    formTable.showsVerticalScrollIndicator = NO;
-    formTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    formTable.showsVerticalScrollIndicator = YES;
+//    formTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    formTable.separatorColor = [UIColor blackColor];
     formTable.backgroundColor = [UIColor grayColor];
+    formTable.tableFooterView = [[UIView alloc]init];
     [self.view addSubview:formTable];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapFormTable)];
     tap.numberOfTapsRequired = 1;
     [formTable addGestureRecognizer:tap];
+    
+    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(tapFormTable)];
+    swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
+    [formTable addGestureRecognizer:swipeRight];
     
     formManager = [[RETableViewManager alloc] initWithTableView:formTable];
     formManager.delegate = self;
@@ -50,7 +58,7 @@
     {
         WSSwipeItem *item = [[WSSwipeItem alloc]init];
         item.btnTitles = @[@"按钮1",@"按钮2"];//从右往左的 按钮文字
-        item.btnBgColors = @[[UIColor redColor],[UIColor blueColor]];//从右往左的 按钮背景颜色
+        item.btnBgColors = @[[UIColor lightGrayColor],[UIColor redColor]];//从右往左的 按钮背景颜色
         item.btnClick = ^(NSString *btnTitle){
             NSLog(@"btnTitle=%@",btnTitle);
             if ([btnTitle isEqualToString:@"按钮1"]) {
@@ -76,14 +84,13 @@
 
 - (void)tapFormTable
 {
-    NSInteger rows = [formTable numberOfRowsInSection:0];
-    for (int i=0; i<rows; i++) {
+    for (int i=0; i < [formTable numberOfRowsInSection:0]; i++)
+    {
         WSSwipeCell *cell = (WSSwipeCell *)[formTable cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
         if (cell &&
-            [cell isKindOfClass:[WSSwipeCell class]] &&
-            [cell respondsToSelector:@selector(swipeRightHandle:)])
+            [cell isKindOfClass:[WSSwipeCell class]])
         {
-            [cell swipeRightHandle:nil];
+            [cell swipeToRight];
         }
     }
 }

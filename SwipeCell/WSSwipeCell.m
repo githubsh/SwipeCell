@@ -15,7 +15,7 @@
 {
     self = [super init];
     if (self) {
-        self.cellHeight = 50;
+        self.cellHeight = 60;
         self.btnWidth = 50;
         self.btnTitles = nil;
         self.btnBgColors = nil;
@@ -29,6 +29,9 @@
 
 
 @interface WSSwipeCell()
+
+@property (nonatomic, assign) BOOL isSwipeLeft;
+
 @end
 
 @implementation WSSwipeCell
@@ -38,25 +41,30 @@
 {
     [super cellDidLoad];
     
+    self.contentView.backgroundColor = [UIColor brownColor];
+    
+    UIImageView *img = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 40, 40)];
+    img.image = [UIImage imageNamed:@"Card_Stack"];
+    [self.contentView addSubview:img];
+    
+    UILabel *titlelabel = [[UILabel alloc]initWithFrame:CGRectMake(10+40+10, 10, WSScreenWidth-60, 20)];
+    titlelabel.text = @"titlelabel";
+    titlelabel.textColor = [UIColor whiteColor];
+    titlelabel.backgroundColor = [UIColor clearColor];
+    titlelabel.font = [UIFont systemFontOfSize:15];
+    [self.contentView addSubview:titlelabel];
+    
+    UILabel *detailTextlabel = [[UILabel alloc]initWithFrame:CGRectMake(10+40+10, 30, WSScreenWidth-60, 20)];
+    detailTextlabel.text = @"detailTextlabel";
+    detailTextlabel.textColor = [UIColor whiteColor];
+    detailTextlabel.backgroundColor = [UIColor clearColor];
+    detailTextlabel.font = [UIFont systemFontOfSize:13];
+    [self.contentView addSubview:detailTextlabel];
+    
+    UILabel *sep = [[UILabel alloc]initWithFrame:CGRectMake(5, 59.5, WSScreenWidth-5, 0.5)];
+    sep.backgroundColor = [UIColor lightGrayColor];
+    [self.contentView addSubview:sep];
 
-    self.contentView.backgroundColor = [UIColor orangeColor];
-    
-    UILabel *aLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 80, 50)];
-    aLable.backgroundColor = [UIColor brownColor];
-    aLable.text = @"aLabel";
-    aLable.font = [UIFont systemFontOfSize:15];
-    aLable.textColor = [UIColor whiteColor];
-    aLable.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:aLable];
-    
-    UILabel *bLable = [[UILabel alloc]initWithFrame:CGRectMake(WSScreenWidth-80, 0, 80, 50)];
-    bLable.backgroundColor = [UIColor brownColor];
-    bLable.text = @"bLabel";
-    bLable.font = [UIFont systemFontOfSize:15];
-    bLable.textColor = [UIColor whiteColor];
-    bLable.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:bLable];
-    
     UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeftHandle:)];
     swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.contentView addGestureRecognizer:swipeLeft];
@@ -66,43 +74,48 @@
     [self.contentView addGestureRecognizer:swipeRight];
 }
 
-- (void)swipeLeftHandle:(UISwipeGestureRecognizer *)swipe
+- (BOOL)checkSwipeLeft
 {
-    WS(bself);
-    
-    BOOL isSwipeLeft = NO;
     NSInteger rows = [self.parentTableView numberOfRowsInSection:0];
-    for (int i=0; i<rows; i++) {
+    for (int i=0; i < rows; i++)
+    {
         WSSwipeCell *cell = (WSSwipeCell *)[self.parentTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
         if (cell &&
-            cell.contentView.frame.origin.x != 0 &&
-            [cell isKindOfClass:[WSSwipeCell class]] && [cell respondsToSelector:@selector(swipeRightHandle:)])
+            [cell isKindOfClass:[WSSwipeCell class]] &&
+            cell.contentView.frame.origin.x != 0)
         {
-            [cell swipeRightHandle:nil];
-            isSwipeLeft = YES;
+            return YES;
         }
     }
     
-    if (!isSwipeLeft) {
+    return NO;
+}
+
+- (void)swipeLeftHandle:(UISwipeGestureRecognizer *)swipe
+{
+    if ([self checkSwipeLeft])
+    {
+        NSInteger rows = [self.parentTableView numberOfRowsInSection:0];
+        for (int i=0; i < rows; i++)
+        {
+            WSSwipeCell *cell = (WSSwipeCell *)[self.parentTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            if (cell &&
+                [cell isKindOfClass:[WSSwipeCell class]] &&
+                cell.contentView.frame.origin.x != 0)
+            {
+                [cell swipeToRight];
+            }
+        }
+        
+    }
+    else
+    {
         CGFloat originX = self.contentView.frame.origin.x;
         if (originX == 0)
         {
-            [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
-                bself.contentView.frame = CGRectMake(-self.item.btnWidth*self.item.btnTitles.count, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
-            } completion:^(BOOL finished) {
-                CGFloat x = bself.contentView.frame.origin.x;
-                CGFloat xOffset = 3;
-                //  回弹效果
-                [UIView animateWithDuration:0.05 animations:^{
-                    bself.contentView.frame = CGRectMake(x-xOffset, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
-                } completion:^(BOOL finished) {
-                    [UIView animateWithDuration:0.05 animations:^{
-                        bself.contentView.frame = CGRectMake(x, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
-                    } completion:nil];
-                }];
-            }];
+            [self swipeToLeft];
         } else {
-            [self swipeRightHandle:nil];
+            [self swipeToRight];
         }
     }
 }
@@ -110,6 +123,59 @@
 - (void)swipeRightHandle:(UISwipeGestureRecognizer *)swipe
 {
     WS(bself);
+    
+    if ([self checkSwipeLeft])
+    {
+        NSInteger rows = [self.parentTableView numberOfRowsInSection:0];
+        for (int i=0; i < rows; i++)
+        {
+            WSSwipeCell *cell = (WSSwipeCell *)[self.parentTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            if (cell &&
+                [cell isKindOfClass:[WSSwipeCell class]] &&
+                cell.contentView.frame.origin.x != 0)
+            {
+                [cell swipeToRight];
+            }
+        }
+    }
+    else
+    {
+        CGFloat x = bself.contentView.frame.origin.x;
+        CGFloat xOffset = 10;
+        //  回弹效果
+        [UIView animateWithDuration:0.2 animations:^{
+            bself.contentView.frame = CGRectMake(x-xOffset, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.2 animations:^{
+                bself.contentView.frame = CGRectMake(x, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+            } completion:nil];
+        }];
+    }
+}
+
+- (void)swipeToLeft
+{
+    WS(bself);
+    [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
+        bself.contentView.frame = CGRectMake(-self.item.btnWidth*self.item.btnTitles.count, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+    } completion:^(BOOL finished) {
+        CGFloat x = bself.contentView.frame.origin.x;
+        CGFloat xOffset = 3;
+        //  回弹效果
+        [UIView animateWithDuration:0.05 animations:^{
+            bself.contentView.frame = CGRectMake(x-xOffset, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.05 animations:^{
+                bself.contentView.frame = CGRectMake(x, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+            } completion:nil];
+        }];
+    }];
+}
+
+- (void)swipeToRight
+{
+    WS(bself);
+    
     [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
         bself.contentView.frame = CGRectMake(0, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
     } completion:nil];
@@ -121,6 +187,7 @@
 - (void)cellWillAppear
 {
     [super cellWillAppear];
+    
     
     [self addBackBtns];
 }
@@ -150,8 +217,7 @@
 
 - (void)btnClick:(UIButton *)btn
 {
-    if (self.item.btnClick)
-    {
+    if (self.item.btnClick){
         self.item.btnClick(btn.titleLabel.text);
     }
 }

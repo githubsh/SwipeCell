@@ -16,6 +16,7 @@
 		B007945A1C22423800CE40E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B00794581C22423800CE40E5 /* LaunchScreen.storyboard */; };
 		B00794631C2245E500CE40E5 /* WSSwipeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B00794621C2245E500CE40E5 /* WSSwipeCell.m */; };
 		B00794651C22470B00CE40E5 /* Define.h in Sources */ = {isa = PBXBuildFile; fileRef = B00794641C22470B00CE40E5 /* Define.h */; };
+		B01667E91C23025C00AD5B8B /* Card_Stack.png in Resources */ = {isa = PBXBuildFile; fileRef = B01667E81C23025C00AD5B8B /* Card_Stack.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		B00794611C2245E500CE40E5 /* WSSwipeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSSwipeCell.h; sourceTree = "<group>"; };
 		B00794621C2245E500CE40E5 /* WSSwipeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WSSwipeCell.m; sourceTree = "<group>"; };
 		B00794641C22470B00CE40E5 /* Define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Define.h; sourceTree = "<group>"; };
+		B01667E81C23025C00AD5B8B /* Card_Stack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Card_Stack.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				B00794531C22423800CE40E5 /* Main.storyboard */,
 				B00794561C22423800CE40E5 /* Assets.xcassets */,
 				B00794581C22423800CE40E5 /* LaunchScreen.storyboard */,
+				B01667E81C23025C00AD5B8B /* Card_Stack.png */,
 				B007945B1C22423800CE40E5 /* Info.plist */,
 				B007944A1C22423800CE40E5 /* Supporting Files */,
 			);
@@ -170,6 +173,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B01667E91C23025C00AD5B8B /* Card_Stack.png in Resources */,
 				B007945A1C22423800CE40E5 /* LaunchScreen.storyboard in Resources */,
 				B00794571C22423800CE40E5 /* Assets.xcassets in Resources */,
 				B00794551C22423800CE40E5 /* Main.storyboard in Resources */,
