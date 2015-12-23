@@ -15,7 +15,7 @@
 {
     self = [super init];
     if (self) {
-        self.cellHeight = 60;
+        self.cellHeight = 50;
         self.btnWidth = 50;
         self.btnTitles = nil;
         self.btnBgColors = nil;
@@ -29,7 +29,12 @@
 
 
 @interface WSSwipeCell()
-
+{
+    UIImageView *img;
+    UILabel *titlelabel;
+    UILabel *detailTextlabel;
+    UILabel *sep;
+}
 @property (nonatomic, assign) BOOL isSwipeLeft;
 
 @end
@@ -43,28 +48,31 @@
     
     self.contentView.backgroundColor = [UIColor brownColor];
     
-    UIImageView *img = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 40, 40)];
+    img = [[UIImageView alloc]init];
     img.image = [UIImage imageNamed:@"Card_Stack"];
     [self.contentView addSubview:img];
     
-    UILabel *titlelabel = [[UILabel alloc]initWithFrame:CGRectMake(10+40+10, 10, WSScreenWidth-60, 20)];
+    titlelabel = [[UILabel alloc]init];
+    
     titlelabel.text = @"titlelabel";
     titlelabel.textColor = [UIColor whiteColor];
     titlelabel.backgroundColor = [UIColor clearColor];
     titlelabel.font = [UIFont systemFontOfSize:15];
     [self.contentView addSubview:titlelabel];
     
-    UILabel *detailTextlabel = [[UILabel alloc]initWithFrame:CGRectMake(10+40+10, 30, WSScreenWidth-60, 20)];
+    detailTextlabel = [[UILabel alloc]init];
+    
     detailTextlabel.text = @"detailTextlabel";
     detailTextlabel.textColor = [UIColor whiteColor];
     detailTextlabel.backgroundColor = [UIColor clearColor];
     detailTextlabel.font = [UIFont systemFontOfSize:13];
     [self.contentView addSubview:detailTextlabel];
     
-    UILabel *sep = [[UILabel alloc]initWithFrame:CGRectMake(5, 59.5, WSScreenWidth-5, 0.5)];
+    sep = [[UILabel alloc]init];
+    
     sep.backgroundColor = [UIColor lightGrayColor];
     [self.contentView addSubview:sep];
-
+    
     UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeftHandle:)];
     swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.contentView addGestureRecognizer:swipeLeft];
@@ -225,6 +233,10 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    img.frame = CGRectMake(10, 10, 40, 40);
+    titlelabel.frame = CGRectMake(10+40+10, 10, WSScreenWidth-60, 20);
+    detailTextlabel.frame = CGRectMake(10+40+10, 30, WSScreenWidth-60, 20);
+    sep.frame = CGRectMake(5, self.item.cellHeight-0.5, WSScreenWidth-5, 0.5);
 }
 
 @end
