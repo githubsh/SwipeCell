@@ -227,17 +227,14 @@
         totalBtnWidth += [btnWidth floatValue];
     }
     CGFloat left = WSScreenWidth-totalBtnWidth;
-
+    
     for (int i=0; i < self.item.btnTitles.count; i++)
     {
         UIButton *btn = [[UIButton alloc]init];
         if (self.item.btnWidths) {
             CGFloat width = [self.item.btnWidths[i] floatValue];
-            
-            NSLog(@"left=%f",left);
             btn.frame = CGRectMake(left, 0, width, self.item.cellHeight);
             left += width;
-            NSLog(@"btn.frame=%@",NSStringFromCGRect(btn.frame));
         } else if (self.item.btnWidth) {
             btn.frame = CGRectMake(WSScreenWidth-self.item.btnWidth*(i+1), 0, self.item.btnWidth, self.item.cellHeight);
         }
@@ -250,7 +247,6 @@
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView.superview insertSubview:btn belowSubview:self.contentView];
     }
-    NSLog(@"**************");
 }
 
 - (void)btnClick:(UIButton *)btn
