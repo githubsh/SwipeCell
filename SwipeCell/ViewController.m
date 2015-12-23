@@ -57,14 +57,18 @@
     for (int i=0; i<10; i++)
     {
         WSSwipeItem *item = [[WSSwipeItem alloc]init];
-        item.btnTitles = @[@"按钮1",@"按钮2"];//从右往左的 按钮文字
-        item.btnBgColors = @[[UIColor lightGrayColor],[UIColor redColor]];//从右往左的 按钮背景颜色
+        item.btnTitles = @[@"按钮1",@"按钮222",@"按钮444444"];
+        item.btnWidths = @[@50,@80,@100];
+        item.btnBgColors = @[[UIColor lightGrayColor],[UIColor redColor],[UIColor cyanColor]];
         item.btnClick = ^(NSString *btnTitle){
             NSLog(@"btnTitle=%@",btnTitle);
             if ([btnTitle isEqualToString:@"按钮1"]) {
                 //do something
             }
-            else if ([btnTitle isEqualToString:@"按钮2"]) {
+            else if ([btnTitle isEqualToString:@"按钮222"]) {
+                //do something
+            }
+            else if ([btnTitle isEqualToString:@"按钮444444"]) {
                 //do something
             }
         };

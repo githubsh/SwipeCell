@@ -17,6 +17,7 @@
     if (self) {
         self.cellHeight = 50;
         self.btnWidth = 50;
+        self.btnWidths = nil;
         self.btnTitles = nil;
         self.btnBgColors = nil;
     }
@@ -164,8 +165,16 @@
 - (void)swipeToLeft
 {
     WS(bself);
+    CGFloat totalBtnWidth = 0;
+    for (NSNumber *btnWidth in self.item.btnWidths) {
+        totalBtnWidth += [btnWidth floatValue];
+    }
     [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
-        bself.contentView.frame = CGRectMake(-self.item.btnWidth*self.item.btnTitles.count, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+        if (self.item.btnWidths) {
+            bself.contentView.frame = CGRectMake(-totalBtnWidth, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+        }else if (self.item.btnWidth) {
+            bself.contentView.frame = CGRectMake(-self.item.btnWidth*self.item.btnTitles.count, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
+        }
     } completion:^(BOOL finished) {
         CGFloat x = bself.contentView.frame.origin.x;
         CGFloat xOffset = 3;
@@ -183,7 +192,6 @@
 - (void)swipeToRight
 {
     WS(bself);
-    
     [UIView animateWithDuration:self.item.btnTitles.count * 0.1 animations:^{
         bself.contentView.frame = CGRectMake(0, 0, bself.contentView.frame.size.width, bself.contentView.frame.size.height);
     } completion:nil];
@@ -196,6 +204,11 @@
 {
     [super cellWillAppear];
     
+    assert(self.item.btnTitles.count == self.item.btnBgColors.count);
+    if (self.item.btnWidths) {
+        assert(self.item.btnTitles.count == self.item.btnWidths.count);
+        assert(self.item.btnWidths.count == self.item.btnBgColors.count);
+    }
     
     [self addBackBtns];
 }
@@ -209,9 +222,25 @@
         }
     }
     
+    CGFloat totalBtnWidth = 0;
+    for (NSNumber *btnWidth in self.item.btnWidths) {
+        totalBtnWidth += [btnWidth floatValue];
+    }
+    CGFloat left = WSScreenWidth-totalBtnWidth;
+
     for (int i=0; i < self.item.btnTitles.count; i++)
     {
-        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(WSScreenWidth-self.item.btnWidth*(i+1), 0, self.item.btnWidth, self.item.cellHeight)];
+        UIButton *btn = [[UIButton alloc]init];
+        if (self.item.btnWidths) {
+            CGFloat width = [self.item.btnWidths[i] floatValue];
+            
+            NSLog(@"left=%f",left);
+            btn.frame = CGRectMake(left, 0, width, self.item.cellHeight);
+            left += width;
+            NSLog(@"btn.frame=%@",NSStringFromCGRect(btn.frame));
+        } else if (self.item.btnWidth) {
+            btn.frame = CGRectMake(WSScreenWidth-self.item.btnWidth*(i+1), 0, self.item.btnWidth, self.item.cellHeight);
+        }
         btn.backgroundColor = self.item.btnBgColors[i];
         [btn setTitle:self.item.btnTitles[i] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -221,6 +250,7 @@
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView.superview insertSubview:btn belowSubview:self.contentView];
     }
+    NSLog(@"**************");
 }
 
 - (void)btnClick:(UIButton *)btn

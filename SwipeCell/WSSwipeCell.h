@@ -11,10 +11,14 @@
 
 @interface WSSwipeItem : RETableViewItem
 
-@property (nonatomic,assign) CGFloat btnWidth;
 @property (nonatomic,strong) NSArray *btnTitles;
+
+//  选择一个
+@property (nonatomic,assign) CGFloat btnWidth;//相同宽度
+@property (nonatomic,strong) NSArray *btnWidths;//不同宽度
+
 @property (nonatomic,strong) NSArray *btnBgColors;
-@property (nonatomic,strong) NSArray *btnWidths;
+
 @property (nonatomic,strong) void (^btnClick)(NSString *btnTitle);
 
 @end
